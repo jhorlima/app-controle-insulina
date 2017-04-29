@@ -38,3 +38,16 @@ app.run(function ($rootScope, $mdSidenav, bootstrap) {
 
     $rootScope.loading = bootstrap.loading();
 });
+
+app.controller('ControleInsulinaController', function ($scope, $mdToast) {
+
+    $scope.calcularInsulina = function () {
+        $mdToast.show(
+            $mdToast
+                .simple()
+                .textContent("Funcionalidade ainda não implementada!")
+                .position('top right')
+                .hideDelay('5000')
+        );
+    };
+});

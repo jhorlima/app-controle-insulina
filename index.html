@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-br">
+<html lang="pt-br" ng-app="ControleInsulina">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -39,7 +39,7 @@
     -->
 </head>
 
-<body ng-app="ControleInsulina" layout="row" ng-cloak>
+<body ng-controller="ControleInsulinaController" layout="row" ng-cloak>
 
 <md-sidenav layout="column"
             class="md-sidenav-left site-sidenav"
@@ -113,7 +113,9 @@
     <md-content class="light-primary-color" layout="column" flex layout-fill>
         <md-list flex>
 
-            <md-subheader class="md-no-sticky light-primary-color">Histórico de Insulina</md-subheader>
+            <md-subheader class="md-no-sticky light-primary-color">
+                Histórico de Insulina
+            </md-subheader>
 
             <md-list-item class="md-2-line">
                 <md-icon md-svg-icon="needle" class="md-avatar-icon"></md-icon>
@@ -270,7 +272,7 @@
         </md-list>
     </md-content>
 
-    <md-button class="md-warn md-fab md-fab-bottom-right" aria-label="Calcular Insulina">
+    <md-button class="md-warn md-fab md-fab-bottom-right" ng-click="calcularInsulina()" aria-label="Calcular Insulina">
         <md-icon md-svg-src="needle"></md-icon>
     </md-button>
 
@@ -293,200 +295,9 @@
 
             <md-dialog-content>
 
-                <div class="md-inline-form" layout="column">
-
-                    <md-content md-theme="docs-dark" layout-padding>
-
-                        <md-content layout="column" layout-align="center center" ng-show="loading.show" flex>
-                            <div layout="row" layout-padding layout-align="space-between center">
-                                <p>{{loading.message}}</p>
-                                <md-progress-circular md-mode="indeterminate" md-diameter="20"></md-progress-circular>
-                            </div>
-                        </md-content>
-
-                        <div layout="column" layout-gt-sm="row" layout-wrap>
-
-                            <md-input-container class="md-icon-float" flex-gt-sm="75">
-                                <label>Quantidade de Insulina</label>
-                                <md-icon md-svg-src="account-edit"></md-icon>
-                                <input type="text"
-                                       name="colaborador_nome_completo"
-                                       ng-model="colaborador.colaborador_nome_completo"
-                                       minlength="15"
-                                       md-maxlength="250"
-                                       required>
-                                <div ng-messages="formulario_colaborador.colaborador_nome_completo.$error">
-                                    <div ng-message="required">
-                                        Este campo é obrigatório.
-                                    </div>
-                                    <div ng-message="minlength">
-                                        Este campo precita ter no mínimo 15 caracteres.
-                                    </div>
-                                    <div ng-message="md-maxlength">
-                                        Este campo precita ter no máximo 250 caracteres.
-                                    </div>
-                                </div>
-                            </md-input-container>
-
-                            <md-input-container class="md-icon-float" flex-gt-sm="25">
-                                <label>Data de Admissão</label>
-                                <md-icon md-svg-src="calendar-check"></md-icon>
-                                <input type="text"
-                                       name="colaborador_data_admissao"
-                                       ng-model="colaborador.colaborador_data_admissao"
-                                       ui-date-mask
-                                       required>
-                                <div ng-messages="formulario_colaborador.colaborador_data_admissao.$error">
-                                    <div ng-message="required">
-                                        Este campo é obrigatório.
-                                    </div>
-                                    <div ng-message="date">
-                                        Este campo precisa ter uma data válida.
-                                    </div>
-                                </div>
-                            </md-input-container>
-
-                            <md-input-container class="md-icon-float" flex-gt-sm="50">
-                                <label>Nome de Usuário</label>
-                                <md-icon md-svg-src="account"></md-icon>
-                                <input type="text"
-                                       name="colaborador_usuario"
-                                       ng-model="colaborador.colaborador_usuario"
-                                       minlength="5"
-                                       md-maxlength="60"
-                                       ng-disabled="colaborador.colaborador_id"
-                                       required>
-                                <div ng-messages="formulario_colaborador.colaborador_usuario.$error">
-                                    <div ng-message="required">
-                                        Este campo é obrigatório.
-                                    </div>
-                                    <div ng-message="minlength">
-                                        Este campo precita ter no mínimo 5 caracteres.
-                                    </div>
-                                    <div ng-message="md-maxlength">
-                                        Este campo precita ter no máximo 60 caracteres.
-                                    </div>
-                                </div>
-                            </md-input-container>
-
-                            <md-input-container class="md-icon-float" flex-gt-sm="50">
-                                <label>Senha de Usuário</label>
-                                <md-icon md-svg-src="key"></md-icon>
-                                <input type="password"
-                                       name="colaborador_senha"
-                                       ng-model="colaborador.colaborador_senha"
-                                       minlength="8"
-                                       md-maxlength="16">
-                                <div ng-messages="formulario_colaborador.colaborador_senha.$error">
-                                    <div ng-message="required">
-                                        Este campo é obrigatório.
-                                    </div>
-                                    <div ng-message="minlength">
-                                        Este campo precita ter no mínimo 8 caracteres.
-                                    </div>
-                                    <div ng-message="md-maxlength">
-                                        Este campo precita ter no máximo 16 caracteres.
-                                    </div>
-                                </div>
-                            </md-input-container>
-
-                            <md-input-container class="md-icon-float" flex-gt-sm="100">
-                                <label>Endereço E-mail</label>
-                                <md-icon md-svg-src="email"></md-icon>
-                                <input type="email"
-                                       name="colaborador_email"
-                                       ng-model="colaborador.colaborador_email"
-                                       minlength="8"
-                                       md-maxlength="100"
-                                       ng-disabled="colaborador.colaborador_id"
-                                       required>
-                                <div ng-messages="formulario_colaborador.colaborador_email.$error">
-                                    <div ng-message="required">
-                                        Este campo é obrigatório.
-                                    </div>
-                                    <div ng-message="required">
-                                        Este campo precisa ter um e-mail válido.
-                                    </div>
-                                    <div ng-message="minlength">
-                                        Este campo precita ter no mínimo 8 caracteres.
-                                    </div>
-                                    <div ng-message="md-maxlength">
-                                        Este campo precita ter no máximo 100 caracteres.
-                                    </div>
-                                </div>
-                            </md-input-container>
-                        </div>
-
-                    </md-content>
-
-                    <md-content md-theme="docs-light" layout-padding>
-
-                        <div layout="column" layout-gt-sm="row" layout-wrap>
-
-                            <md-input-container class="md-icon-float" flex-gt-sm="33">
-                                <label>Perfil</label>
-                                <md-icon md-svg-src="account-card-details"></md-icon>
-                                <md-select name="colaborador_perfil" ng-model="colaborador.colaborador_perfil" required>
-                                    <md-option ng-repeat="perfil in parametros.colaborador_perfil" ng-value="perfil">
-                                        {{perfil}}
-                                    </md-option>
-                                </md-select>
-                                <div class="md-errors-spacer"></div>
-                                <div ng-messages="formulario_colaborador.colaborador_perfil.$error">
-                                    <div ng-message="required">
-                                        Este campo é obrigatório.
-                                    </div>
-                                </div>
-                            </md-input-container>
-
-                            <md-input-container class="md-icon-float" flex-gt-sm="33">
-                                <label>Função</label>
-                                <md-icon md-svg-src="worker"></md-icon>
-                                <md-select name="colaborador_funcao" ng-model="colaborador.colaborador_funcao" required>
-                                    <md-option ng-repeat="funcao in parametros.colaborador_funcao" ng-value="funcao">
-                                        {{funcao}}
-                                    </md-option>
-                                </md-select>
-                                <div class="md-errors-spacer"></div>
-                                <div ng-messages="formulario_colaborador.colaborador_funcao.$error">
-                                    <div ng-message="required">
-                                        Este campo é obrigatório.
-                                    </div>
-                                </div>
-                            </md-input-container>
-
-                            <md-input-container class="md-icon-float" flex-gt-sm="33">
-                                <label>Setor</label>
-                                <md-icon md-svg-src="watermark"></md-icon>
-                                <md-select name="colaborador_setor" ng-model="colaborador.colaborador_setor" required>
-                                    <md-option ng-repeat="setor in parametros.colaborador_setor" ng-value="setor">
-                                        {{setor}}
-                                    </md-option>
-                                </md-select>
-                                <div class="md-errors-spacer"></div>
-                                <div ng-messages="formulario_colaborador.colaborador_setor.$error">
-                                    <div ng-message="required">
-                                        Este campo é obrigatório.
-                                    </div>
-                                </div>
-                            </md-input-container>
-                        </div>
-
-                    </md-content>
-
-                </div>
-
             </md-dialog-content>
 
             <md-dialog-actions layout="row">
-                <md-button class="md-raised md-warn"
-                           ng-show="colaborador.colaborador_id"
-                           ng-disabled="colaborador.colaborador_senha"
-                           ng-click="redefinirSenha()"
-                           type="button">
-                    <md-icon md-svg-icon="key"></md-icon>
-                    Senha Padrão
-                </md-button>
                 <md-button class="md-raised md-primary"
                            ng-disabled="formulario_colaborador.$invalid"
                            type="submit">
