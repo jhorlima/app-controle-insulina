@@ -70,6 +70,12 @@ md-content.md-input-theme {
     padding-top: 3%;
 }
 
+.logo {
+    width: 60%;
+    height: auto;
+    margin: 3% auto 1%;
+}
+
 .md-sidenav-left .md-theme-indigo, .md-sidenav-left .nav-theme {
     background-color: #FFFFFF;
     color: #212121;

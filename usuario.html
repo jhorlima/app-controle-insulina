@@ -1,0 +1,85 @@
+<md-dialog aria-label="Formulário do Usuário" flex="75" flex-gt-sm="50">
+
+    <form name="formulario_usuario" ng-submit="salvar()" autocomplete="off">
+
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Formulário de Usuário</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="fechar()">
+                    <md-icon md-svg-src="close" aria-label="Fechar formulário"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+
+            <div class="md-inline-form" layout="column">
+
+                <md-content md-theme="docs-dark" layout-padding>
+
+                    <md-content layout="column" layout-align="center center" ng-show="loading.show" flex>
+                        <div layout="row" layout-padding layout-align="space-between center">
+                            <p>{{loading.message}}</p>
+                            <md-progress-circular md-mode="indeterminate" md-diameter="20"></md-progress-circular>
+                        </div>
+                    </md-content>
+
+                    <div layout="column" layout-gt-sm="row" layout-wrap>
+
+                        <md-input-container class="md-icon-float" flex-gt-sm="100">
+                            <label>Nome do Usuário</label>
+                            <md-icon md-svg-src="calendar-clock"></md-icon>
+                            <input type="text"
+                                   name="nome_usuario"
+                                   ng-model="dadosUsuario.nome_usuario"
+                                   minlength="5"
+                                   md-maxlength="250"
+                                   required>
+                            <div ng-messages="formulario_usuario.nome_usuario.$error">
+                                <div ng-message="required">
+                                    Este campo é obrigatório.
+                                </div>
+                                <div ng-message="minlength">
+                                    Este campo precita ter no mínimo 5 caracteres.
+                                </div>
+                                <div ng-message="md-maxlength">
+                                    Este campo precita ter no máximo 250 caracteres.
+                                </div>
+                            </div>
+                        </md-input-container>
+
+                        <md-input-container class="md-icon-float" flex-gt-sm="100">
+                            <label>Tipo de Diabete</label>
+                            <md-icon md-svg-src="history"></md-icon>
+                            <md-select ng-model="dadosUsuario.tipo_diabete" name="tipo_diabete" required>
+                                <md-option ng-value="tipoDiabete" ng-repeat="tipoDiabete in tiposDiabetes">
+                                    {{tipoDiabete.nome}}
+                                </md-option>
+                            </md-select>
+                            <div class="md-errors-spacer"></div>
+                            <div ng-messages="formulario_usuario.tipo_diabete.$error">
+                                <div ng-message="required">Escolha seu tipo de diabete.</div>
+                            </div>
+                        </md-input-container>
+
+                        <md-content ng-if="dadosUsuario.tipo_diabete" flex-gt-sm="100">
+                            <h3 md-truncate="">Informações da diabete:</h3>
+                            <p>{{dadosUsuario.tipo_diabete.descricao}}</p>
+                        </md-content>
+
+                    </div>
+
+                </md-content>
+            </div>
+
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-primary" ng-disabled="formulario_usuario.$invalid" type="submit">
+                <md-icon md-svg-icon="content-save"></md-icon>
+                Salvar Usuário
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

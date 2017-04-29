@@ -1,0 +1,124 @@
+<md-dialog aria-label="Formulário de Glicose" flex="75" flex-gt-sm="50">
+
+    <form name="formulario_glicose" ng-submit="salvar()" autocomplete="off">
+
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Formulário de Glicose</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="fechar()">
+                    <md-icon md-svg-src="close" aria-label="Fechar formulário"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+
+            <div class="md-inline-form" layout="column">
+
+                <md-content md-theme="docs-dark" layout-padding>
+
+                    <md-content layout="column" layout-align="center center" ng-show="loading.show" flex>
+                        <div layout="row" layout-padding layout-align="space-between center">
+                            <p>{{loading.message}}</p>
+                            <md-progress-circular md-mode="indeterminate" md-diameter="20"></md-progress-circular>
+                        </div>
+                    </md-content>
+
+                    <div layout="column" layout-gt-sm="row" layout-wrap>
+
+                        <md-input-container class="md-icon-float" flex-gt-sm="100">
+                            <label>Nível de Glicose (mg/dl)</label>
+                            <md-icon md-svg-src="needle"></md-icon>
+                            <input type="text"
+                                   name="glicose"
+                                   ng-model="insulina.glicose"
+                                   ui-number-mask="2"
+                                   required>
+                            <div ng-messages="formulario_glicose.glicose.$error">
+                                <div ng-message="required">
+                                    É necessário definir seu nível de glicose atual.
+                                </div>
+                            </div>
+                        </md-input-container>
+
+                        <md-input-container class="md-icon-float" flex-gt-sm="100">
+                            <label>Data da Coleta de Glicose</label>
+                            <md-icon md-svg-src="calendar-clock"></md-icon>
+                            <input type="text"
+                                   name="data"
+                                   ng-model="insulina.data"
+                                   ui-date-mask
+                                   required>
+                            <div ng-messages="formulario_glicose.data.$error">
+                                <div ng-message="required">
+                                    É necessário definir a data da coleta da glicose.
+                                </div>
+                                <div ng-message="date">
+                                    Este campo precisa ter uma data válida.
+                                </div>
+                            </div>
+                        </md-input-container>
+
+                        <md-input-container class="md-icon-float" flex-gt-sm="100">
+                            <label>Última aplicação de Insulina</label>
+                            <md-icon md-svg-src="history"></md-icon>
+                            <md-select ng-model="insulina.ultima_insulina"
+                                       name="ultima_insulina"
+                                       ng-required="historicoInsulinas.length">
+                                <md-option ng-if="!historicoInsulinas.length" ng-disabled="true">
+                                    Indisponível
+                                </md-option>
+                                <md-option ng-value="historico" ng-repeat="historico in historicoInsulinas">
+                                    {{historico.quant}} de {{historico.tipo.nome}} em {{historico.data | date:'dd/MM/yyyy - H:mm'}}
+                                </md-option>
+                            </md-select>
+                            <div class="md-errors-spacer"></div>
+                            <div ng-messages="formulario_glicose.ultima_insulina.$error">
+                                <div ng-message="required">Escolha sua ultima aplicação de insulina.</div>
+                            </div>
+                        </md-input-container>
+
+                        <md-input-container class="md-icon-float" flex-gt-sm="100">
+                            <label>Tipo de Insulina</label>
+                            <md-icon md-svg-src="medical-bag"></md-icon>
+                            <md-select ng-model="insulina.tipo"
+                                       name="tipo_insulina"
+                                       ng-disabled="!insulina.glicose"
+                                       required>
+                                <md-optgroup ng-repeat="tipo in tiposInsulinas" label="{{tipo.nome}} ({{tipo.tipo}})">
+                                    <md-option ng-value="tiposInsulina" ng-repeat="tiposInsulina in tipo.insulinas">
+                                        {{tiposInsulina.nome}}
+                                    </md-option>
+                                </md-optgroup>
+                            </md-select>
+                            <div class="md-errors-spacer"></div>
+                            <div ng-messages="formulario_glicose.tipo_insulina.$error">
+                                <div ng-message="required">Escolha pelo menos um tipo de insulina.</div>
+                            </div>
+                        </md-input-container>
+
+                        <md-content ng-if="insulina.tipo" flex-gt-sm="100">
+                            <h3 md-truncate="">Informações da Insulina:</h3>
+                            <p><strong>Quantidade de Insulina Necessária: {{calcularInsulina()}}</strong></p>
+                            <p><strong>Início da Ação:</strong> {{insulina.tipo.acao | tempoInsulina}}</p>
+                            <p><strong>Pico:</strong> {{insulina.tipo.pico | tempoInsulina}}</p>
+                            <p><strong>Duração:</strong> {{insulina.tipo.duracao | tempoInsulina}}</p>
+                            <p><strong>Horário Injecao:</strong> {{insulina.tipo.horario_injecao}}</p>
+                        </md-content>
+
+                    </div>
+
+                </md-content>
+            </div>
+
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-primary" ng-disabled="formulario_glicose.$invalid" type="submit">
+                <md-icon md-svg-icon="content-save"></md-icon>
+                Registrar Aplicação
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
